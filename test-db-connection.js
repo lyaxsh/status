@@ -11,38 +11,59 @@ async function testConnection() {
     return;
   }
 
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: {
-      rejectUnauthorized: false
+  // Try different connection configurations for Session Pooler
+  const configs = [
+    {
+      name: 'Session Pooler with SSL',
+      connectionString: connectionString + '?sslmode=require',
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 15000
     },
-    connectionTimeoutMillis: 10000, // 10 seconds
-    query_timeout: 10000
-  });
+    {
+      name: 'Session Pooler without SSL',
+      connectionString: connectionString + '?sslmode=disable',
+      ssl: false,
+      connectionTimeoutMillis: 15000
+    },
+    {
+      name: 'Session Pooler default',
+      connectionString: connectionString,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 15000
+    }
+  ];
 
-  try {
-    console.log('Attempting to connect...');
-    await client.connect();
-    console.log('✅ Successfully connected to database!');
+  for (const config of configs) {
+    console.log(`\n🔍 Trying ${config.name}...`);
     
-    // Test a simple query
-    const result = await client.query('SELECT NOW()');
-    console.log('✅ Database query successful:', result.rows[0]);
-    
-    await client.end();
-  } catch (error) {
-    console.error('❌ Connection failed:', error.message);
-    console.error('Error details:', error);
-    
-    if (error.code === 'ETIMEDOUT') {
-      console.log('\n💡 This looks like an IP restriction issue.');
-      console.log('Please check your Supabase dashboard:');
-      console.log('1. Go to Settings → Database');
-      console.log('2. Look for IP restrictions');
-      console.log('3. Add your current IP to the allowed list');
-      console.log('4. Or temporarily disable IP restrictions');
+    const client = new Client({
+      connectionString: config.connectionString,
+      ssl: config.ssl,
+      connectionTimeoutMillis: config.connectionTimeoutMillis
+    });
+
+    try {
+      await client.connect();
+      console.log(`✅ Successfully connected using ${config.name}!`);
+      
+      // Test a simple query
+      const result = await client.query('SELECT NOW()');
+      console.log('✅ Database query successful:', result.rows[0]);
+      
+      await client.end();
+      return; // Success, exit
+    } catch (error) {
+      console.error(`❌ ${config.name} failed:`, error.message);
+      await client.end();
     }
   }
+  
+  console.log('\n💡 All connection attempts failed.');
+  console.log('This might be due to:');
+  console.log('1. Incorrect Session Pooler URL');
+  console.log('2. Wrong credentials');
+  console.log('3. Network restrictions');
+  console.log('\n💡 Alternative: Deploy to Vercel and let it handle the database connection');
 }
 
 testConnection(); 
