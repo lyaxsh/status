@@ -1,6 +1,12 @@
+<div align="center">
+
+[<img src="https://socialify.git.ci/lyaxsh/status/image?description=1&font=Raleway&language=1&name=1&owner=1&pattern=Transparent&theme=Dark" alt="status" width="640" height="320" />](https://socialify.git.ci/lyaxsh/status/image?description=1&font=Raleway&language=1&name=1&owner=1&pattern=Transparent&theme=Dark)
+
 # Status Timeline App
 
 A modern, password-protected timeline app with admin posting, random color dots, and pixel-perfect UI.
+
+</div>
 
 ## Features
 - Pixel-perfect vertical timeline with colored dots
