@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Status Timeline App
 
-## Getting Started
+A modern, password-protected timeline app with admin posting, random color dots, and pixel-perfect UI.
 
-First, run the development server:
+## Features
+- Pixel-perfect vertical timeline with colored dots
+- Admin page with random default color for each new update
+- Password protection for both timeline and admin
+- Timeline only at `/`, admin only at `/admin`
+- No `/timeline` route
+- Browser password managers discouraged from saving real passcode
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Local Development
+
+1. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+2. **Set up your local database:**
+   - By default, uses SQLite (`dev.db`).
+   - To reset/clear updates:
+     ```sh
+     npx prisma db push
+     npx prisma db execute --file=clear-updates.sql --schema=prisma/schema.prisma
+     ```
+3. **Start the dev server:**
+   ```sh
+   npm run dev
+   ```
+
+## Production/Deployment (Vercel)
+
+- **Do NOT use `dev.db` or SQLite for production on Vercel.**
+- Use a cloud database (Postgres, MySQL, or hosted SQLite like Turso).
+- Set the `DATABASE_URL` environment variable in Vercel dashboard to your production DB.
+- Vercel will auto-detect Next.js and deploy.
+- All routes except `/` and `/admin` are redirected to `/`.
+
+## Environment Variables
+
+Create a `.env` file (not committed) with at least:
+```
+DATABASE_URL=your_database_url_here
+ADMIN_PASSCODE=your_admin_passcode_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Useful Scripts
+- `npm run dev` — Start local dev server
+- `npm run build` — Build for production
+- `npm run start` — Start production server
+- `npx prisma migrate dev --name <desc>` — Run a new migration
+- `npx prisma studio` — Visual DB browser
+- `npx prisma db execute --file=clear-updates.sql --schema=prisma/schema.prisma` — Clear all updates
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Security Notes
+- Password fields are protected from browser autofill.
+- Passcode is required for both timeline and admin.
+- Do not commit `.env` or `dev.db` to your repo.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Deploy, enjoy, and stay secure!** 

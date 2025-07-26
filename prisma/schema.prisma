@@ -1,0 +1,20 @@
+// prisma/schema.prisma
+
+generator client {
+  provider    = "prisma-client-js"
+  engineType  = "library"     // ← key: build a single .node lib, not an external .so
+  // You can omit binaryTargets entirely; Prisma will pick the correct one for you.
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Update {
+  id        Int      @id @default(autoincrement())
+  text      String
+  imageUrl  String?
+  color     String?  @default("#3B82F6") // Default blue color
+  createdAt DateTime @default(now())
+}
