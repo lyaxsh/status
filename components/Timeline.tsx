@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import Image from 'next/image'
 
 interface Update {
   id: number
@@ -134,7 +135,7 @@ export default function Timeline() {
               }
               endMessage={
                 <div className="text-center py-8">
-                  <div className="text-gray-500 text-sm font-sans">You've reached the beginning</div>
+                  <div className="text-gray-500 text-sm font-sans">You&apos;ve reached the beginning</div>
                 </div>
               }
             >
@@ -157,11 +158,13 @@ export default function Timeline() {
                       <p className="text-white text-base leading-relaxed mb-1 font-sans">{update.text}</p>
                       {update.imageUrl && (
                         <div className="mb-2">
-                          <img
+                          <Image
                             src={update.imageUrl}
                             alt="Update image"
+                            width={500}
+                            height={300}
                             className="rounded-lg max-w-full h-auto"
-                            loading="lazy"
+                            style={{ objectFit: 'cover' }}
                           />
                         </div>
                       )}
